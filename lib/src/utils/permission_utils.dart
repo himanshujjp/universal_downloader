@@ -1,7 +1,10 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:device_info_plus/device_info_plus.dart';
+
+// Conditional import for device_info_plus to avoid platform conflicts
+import 'package:device_info_plus/device_info_plus.dart'
+    if (dart.library.io) 'package:device_info_plus/device_info_plus.dart';
 
 /// Utility class for handling platform-specific permissions
 class PermissionUtils {
@@ -74,11 +77,15 @@ class PermissionUtils {
     if (!Platform.isAndroid) return false;
 
     try {
+      // Try to get device info, but don't fail if it's not available
+      if (kIsWeb) return false; // Web doesn't have Android versions
+
       final deviceInfo = DeviceInfoPlugin();
       final androidInfo = await deviceInfo.androidInfo;
       return androidInfo.version.sdkInt >= 33;
     } catch (e) {
-      // If we can't get version info, assume older Android
+      // If we can't get version info, assume older Android for safety
+      // This ensures backward compatibility
       return false;
     }
   }

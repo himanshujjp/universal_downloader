@@ -140,8 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     try {
-      // Create a simple stream of bytes (Hello World text)
-      final text =
+      const text =
           'Hello World from Stream Download!\nThis is a test file created from a stream.';
       final bytes = utf8.encode(text);
       final stream = Stream<int>.fromIterable(bytes);
@@ -174,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     try {
       // Create some binary data (a simple text file)
-      final text =
+      const text =
           'Hello World from Data Download!\nThis is a test file created from Uint8List data.';
       final data = Uint8List.fromList(utf8.encode(text));
 
@@ -223,7 +222,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       const SizedBox(height: 8),
                       Text(
                           'Current Platform: ${UniversalDownloader.platformName}'),
-                      Text('Download Method: Stream-based (all platforms)'),
+                      const Text(
+                          'Download Method: Stream-based (all platforms)'),
                       Text(
                           'Supports Directory Selection: ${UniversalDownloader.supportsDirectorySelection}'),
                       Text(
@@ -245,7 +245,7 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 16),
               if (!_hasStoragePermission)
                 Card(
-                  color: Colors.orange.shade50,
+                  color: const Color(0xFFFFE0B2), // Orange shade 50 equivalent
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(

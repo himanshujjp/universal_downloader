@@ -86,7 +86,6 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
             anchor.remove();
           });
 
-          print('✅ Downloaded: $cleanFilename (${blob.size} bytes)');
           completer.complete();
         } catch (blobError) {
           completer.completeError(blobError);
@@ -108,7 +107,7 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
     await completer.future;
     return;
   } catch (e) {
-    // Silently continue to next method
+    // Method 1 failed, continue to Method 1.5
   }
 
   // Method 1.5: XMLHttpRequest Blob without credentials (fallback for CORS issues)
@@ -156,7 +155,6 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
             anchor.remove();
           });
 
-          print('✅ Downloaded: $cleanFilename (${blob.size} bytes)');
           completer.complete();
         } catch (blobError) {
           completer.completeError(blobError);
@@ -178,7 +176,7 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
     await completer.future;
     return;
   } catch (e) {
-    // Silently continue to next method
+    // Method 1.5 failed, continue to Method 2.5
   }
 
   // Method 2.5: Fetch API with no-cors mode (for PDFs and other restricted content)
@@ -215,13 +213,12 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
         anchor.remove();
       });
 
-      print('✅ Downloaded: $cleanFilename (${blob.size} bytes)');
       return;
     } catch (blobError) {
-      // Silently continue to next method
+      // Method 2.5 failed, continue to next method
     }
   } catch (e) {
-    // Silently continue to next method
+    // Method 2.5 failed, continue to Method 2.7
   }
 
   // Method 2.7: Special Fetch for media files (force download headers)
@@ -269,12 +266,11 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
           anchor.remove();
         });
 
-        print('✅ Downloaded: $cleanFilename (${blob.size} bytes)');
         return;
       }
     }
   } catch (e) {
-    // Silently continue to next method
+    // Method 2.7 failed, continue to Method 2.8
   }
 
   // Method 2.8: Data URL approach for small media files
@@ -325,12 +321,11 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
           anchor.remove();
         });
 
-        print('✅ Downloaded: $cleanFilename (${blob.size} bytes)');
         return;
       }
     }
   } catch (e) {
-    // Silently continue to next method
+    // Method 2.8 failed, continue to Method 3
   }
 
   // Method 3: Direct anchor download
@@ -362,10 +357,9 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
     await Future.delayed(const Duration(milliseconds: 800));
     anchor.remove();
 
-    print('✅ Downloaded: $cleanFilename');
     return;
   } catch (e) {
-    // Silently continue to next method
+    // Method 3 failed, continue to Method 3.5
   }
 
   // Method 3.5: Aggressive media file download
@@ -397,11 +391,10 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
       await Future.delayed(const Duration(milliseconds: 1000));
       anchor.remove();
 
-      print('✅ Downloaded: $cleanFilename');
       return;
     }
   } catch (e) {
-    // Silently continue to next method
+    // Method 3.5 failed, continue to Method 4
   }
 
   // Method 4: Enhanced direct download with parameters
@@ -424,10 +417,9 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
     await Future.delayed(const Duration(milliseconds: 800));
     anchor.remove();
 
-    print('✅ Downloaded: $cleanFilename');
     return;
   } catch (e) {
-    // Silently continue to next method
+    // Method 4 failed, continue to Method 5
   }
 
   // Method 5: Last resort - window.open
@@ -455,17 +447,17 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
       html.window.open(downloadUrl, '_blank');
       iframe.remove();
 
-      print('✅ Downloaded: $cleanFilename');
+      // Download initiated
     } else {
       final downloadUrl = url.contains('?')
           ? '$url&download=true&filename=$cleanFilename&t=${DateTime.now().millisecondsSinceEpoch}'
           : '$url?download=true&filename=$cleanFilename&t=${DateTime.now().millisecondsSinceEpoch}';
 
       html.window.open(downloadUrl, '_self');
-      print('✅ Downloaded: $cleanFilename');
+      // Download initiated
     }
   } catch (finalError) {
-    print('❌ Download failed: $cleanFilename - $finalError');
+    // Download failed
     rethrow;
   }
 }
