@@ -1,87 +1,93 @@
-# Flutter/Dart
+# Dart & Flutter
 .dart_tool/
 .packages
 .pub/
 build/
-flutter_*.png
-flutter_*.jpeg
-flutter_*.jpg
-flutter_*.webp
-flutter_*.bmp
-flutter_*.gif
-
-# Flutter Plugins
-.flutter-plugins
-.flutter-plugins-dependencies
+flutter_*
 
 # IDEs
-.vscode/
 .idea/
-*.swp
-*.swo
-*~
+*.iml
+.vscode/
 
-# OS generated files
+# OS
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
-
-# Android
-android/app/src/main/AndroidManifest.xml.bak
-android/app/src/main/java/**/R.java
-android/app/src/main/java/**/BuildConfig.java
-android/gradle.properties.bak
-
-# iOS
-ios/Flutter/Generated.xcconfig
-ios/Flutter/app.flx
-ios/Flutter/app.zip
-ios/Flutter/flutter_assets/
-ios/ServiceDefinitions.json
-ios/Runner/GeneratedPluginRegistrant.*
-
-# macOS
-macos/Flutter/GeneratedPluginRegistrant.swift
-macos/Flutter/ephemeral/
-macos/Flutter/Flutter-Generated.xcconfig
-
-# Windows
-windows/Flutter/GeneratedPluginRegistrant.cc
-windows/Flutter/GeneratedPluginRegistrant.h
-windows/Flutter/ephemeral/
-windows/Flutter/Flutter-Generated.xcconfig
-
-# Linux
-linux/Flutter/GeneratedPluginRegistrant.cc
-linux/Flutter/GeneratedPluginRegistrant.h
-linux/Flutter/ephemeral/
-linux/Flutter/Flutter-Generated.xcconfig
-
-# Web
-web/build/
-web/packages/
-
-# Test coverage
-coverage/
-*.lcov
 
 # Logs
 *.log
 
-# Temporary files
+# Coverage
+coverage/
+
+# Generated
+*.lock
+
+# Misc
+*.swp
+*.swo
 *.tmp
-*.temp
+*.bak
 
-# Package specific
-pubspec.lock
-example/pubspec.lock
-
-# Screenshots (if not needed in repo)
-#screenshots/
-
-# Documentation builds
-doc/api/
+# Example build outputs
+example/build/
+example/.dart_tool/
+example/.idea/
+example/.vscode/
+example/ios/Flutter/App.framework
+example/ios/Flutter/Flutter.framework
+example/ios/Flutter/Flutter.podspec
+example/ios/Flutter/Generated.xcconfig
+example/ios/Flutter/ephemeral/
+example/ios/Flutter/app.flx
+example/ios/Flutter/app.zip
+example/ios/Flutter/flutter_assets/
+example/ios/Flutter/engine/
+example/ios/Flutter/engine/Flutter.framework
+example/ios/Flutter/engine/Flutter.podspec
+example/ios/Flutter/engine/ephemeral/
+example/ios/Flutter/engine/app.flx
+example/ios/Flutter/engine/app.zip
+example/ios/Flutter/engine/flutter_assets/
+example/ios/Flutter/engine/engine/
+example/ios/Flutter/engine/engine/Flutter.framework
+example/ios/Flutter/engine/engine/Flutter.podspec
+example/ios/Flutter/engine/engine/ephemeral/
+example/ios/Flutter/engine/engine/app.flx
+example/ios/Flutter/engine/engine/app.zip
+example/ios/Flutter/engine/engine/flutter_assets/
+example/ios/Flutter/engine/engine/engine/
+example/ios/Flutter/engine/engine/engine/Flutter.framework
+example/ios/Flutter/engine/engine/engine/Flutter.podspec
+example/ios/Flutter/engine/engine/engine/ephemeral/
+example/ios/Flutter/engine/engine/engine/app.flx
+example/ios/Flutter/engine/engine/engine/app.zip
+example/ios/Flutter/engine/engine/engine/flutter_assets/
+example/ios/Flutter/engine/engine/engine/engine/
+example/ios/Flutter/engine/engine/engine/engine/Flutter.framework
+example/ios/Flutter/engine/engine/engine/engine/Flutter.podspec
+example/ios/Flutter/engine/engine/engine/engine/ephemeral/
+example/ios/Flutter/engine/engine/engine/engine/app.flx
+example/ios/Flutter/engine/engine/engine/engine/app.zip
+example/ios/Flutter/engine/engine/engine/engine/flutter_assets/
+example/ios/Flutter/engine/engine/engine/engine/engine/
+example/ios/Flutter/engine/engine/engine/engine/engine/Flutter.framework
+example/ios/Flutter/engine/engine/engine/engine/engine/Flutter.podspec
+example/ios/Flutter/engine/engine/engine/engine/engine/ephemeral/
+example/ios/Flutter/engine/engine/engine/engine/engine/app.flx
+example/ios/Flutter/engine/engine/engine/engine/engine/app.zip
+example/ios/Flutter/engine/engine/engine/engine/engine/flutter_assets/
+example/ios/Flutter/engine/engine/engine/engine/engine/engine/
+example/ios/Flutter/engine/engine/engine/engine/engine/engine/Flutter.framework
+example/ios/Flutter/engine/engine/engine/engine/engine/engine/Flutter.podspec
+example/ios/Flutter/engine/engine/engine/engine/engine/engine/ephemeral/
+example/ios/Flutter/engine/engine/engine/engine/engine/engine/app.flx
+example/ios/Flutter/engine/engine/engine/engine/engine/engine/app.zip
+example/ios/Flutter/engine/engine/engine/engine/engine/engine/flutter_assets/
+example/ios/Flutter/engine/engine/engine/engine/engine/engine/engine/
+example/ios/Flutter/engine/engine/engine/engine/engine/engine/engine/Flutter.framework
+example/ios/Flutter/engine/engine/engine/engine/engine/engine/engine/Flutter.podspec
+example/ios/Flutter/engine/engine/engine/engine/engine/engine/engine/ephemeral/
+example/ios/Flutter/engine/engine/engine/engine/engine/engine/engine/app.flx
+example/ios/Flutter/engine/engine/engine/engine/engine/engine/engine/app.zip
+example/ios/Flutter/engine/engine/engine/engine/engine/engine/engine/flutter_assets/
