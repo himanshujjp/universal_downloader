@@ -37,7 +37,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  universal_downloader: ^1.0.3
+  universal_downloader: ^1.0.4
 ```
 
 Then run:

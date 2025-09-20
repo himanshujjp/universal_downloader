@@ -1,3 +1,10 @@
+## 1.0.4
+
+- **Release**: Complete changelog documentation update
+- **Added**: Missing changelog entries for versions 1.0.1 and 1.0.2
+- **Updated**: Full version history documentation
+- **Improved**: Package documentation completeness
+
 ## 1.0.3
 
 - **Release**: Proper 1.0.3 release with complete platform support
