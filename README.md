@@ -37,7 +37,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  universal_downloader: ^1.0.0
+  universal_downloader: ^1.0.3
 ```
 
 Then run:
@@ -437,6 +437,12 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Changelog
+
+### 1.0.3
+- **Release**: Proper 1.0.3 release with complete platform support
+- **Fixed**: All platform support issues resolved for pub.dev scoring
+- **Updated**: Documentation and changelog for proper release
+- **Verified**: All 6 platforms (Android, iOS, Web, Windows, macOS, Linux) fully supported
 
 ### 1.0.0
 - **Initial Release** with full platform support
