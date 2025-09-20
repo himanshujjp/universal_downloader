@@ -23,7 +23,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  universal_downloader: ^1.0.4
+  universal_downloader: ^1.0.5
 ```
 
 Then run:
@@ -183,6 +183,12 @@ flutter run
 ```
 
 ## Changelog
+
+### 1.0.5
+- **Release**: Documentation update with enhanced README
+- **Updated**: README.md with clearer method recommendations
+- **Improved**: `downloadFromUrlStream()` prominently featured as recommended method
+- **Enhanced**: Usage examples and platform support documentation
 
 ### 1.0.4
 - **Release**: Enhanced documentation with clear recommendations
