@@ -1,0 +1,6 @@
+# Files to exclude from publishing
+.vscode/
+example/pubspec.lock
+example/windows/runner/flutter_window.cpp
+example/windows/runner/flutter_window.h
+.flutter-plugins-dependencies
