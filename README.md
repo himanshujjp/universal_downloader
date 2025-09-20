@@ -439,10 +439,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Changelog
 
 ### 1.0.0
-- Initial release
-- Support for all Flutter platforms
-- Progress tracking
-- Platform-optimized storage
-- Comprehensive error handling
-- Web download support
-- Full documentation and examples
+- **Initial Release** with full platform support
+- **Fixed**: Added explicit platform declarations for all 6 platforms (Android, iOS, Web, Windows, macOS, Linux)
+- **Fixed**: Resolved pub.dev platform support detection issues
+- Support for all Flutter platforms (Android, iOS, Web, Windows, macOS, Linux)
+- Real-time download progress tracking with percentage and bytes
+- Platform-optimized storage locations
+- Comprehensive error handling with specific exception types
+- Web support using browser download mechanism
+- Easy-to-use API with callback support
+- Complete example application
+- Full documentation and usage examples

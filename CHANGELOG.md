@@ -1,19 +1,18 @@
-## 1.0.1
+## 1.0.0
 
+- **Initial Release** with full platform support
+- **Fixed**: Added explicit platform declarations for all 6 platforms (Android, iOS, Web, Windows, macOS, Linux)
+- **Fixed**: Resolved pub.dev platform support detection issues
 - **Fixed**: Web downloader now supports all file types without restrictions
 - **Fixed**: Resolved CORS detection issues in web downloads
 - **Fixed**: Corrected filename corruption in web downloads (removed problematic character replacement)
 - **Improved**: Enhanced error handling for web download failures
 - **Improved**: Simplified download logic for better reliability
-
-## 1.0.0
-
-- Initial release of universal_downloader
-- Support for all Flutter platforms (Android, iOS, Web, Windows, macOS, Linux)
-- Real-time download progress tracking with percentage and bytes
-- Platform-optimized storage locations
-- Comprehensive error handling with specific exception types
-- Web support using browser download mechanism
-- Easy-to-use API with callback support
-- Complete example application
-- Full documentation and usage examples
+- **Added**: Comprehensive platform support with conditional imports
+- **Added**: Real-time download progress tracking with percentage and bytes
+- **Added**: Platform-optimized storage locations
+- **Added**: Comprehensive error handling with specific exception types
+- **Added**: Web support using browser download mechanism
+- **Added**: Easy-to-use API with callback support
+- **Added**: Complete example application
+- **Added**: Full documentation and usage examples
