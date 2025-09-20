@@ -1,3 +1,11 @@
+## 1.0.6
+
+- **Release**: Complete API documentation update
+- **Updated**: README.md with all core methods and their signatures
+- **Added**: Comprehensive method documentation for downloadStream, downloadData, downloadUrl
+- **Fixed**: Web download example to use correct method (downloadUrl instead of non-existent downloadWebFile)
+- **Enhanced**: API reference section with complete method signatures and parameters
+
 ## 1.0.5
 
 - **Release**: Documentation update with enhanced README
