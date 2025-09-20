@@ -23,7 +23,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  universal_downloader: ^1.0.5
+  universal_downloader: ^1.0.6
 ```
 
 Then run:
@@ -76,24 +76,6 @@ await UniversalDownloader.downloadFile(
 );
 ```
 
-### Web Download (Enhanced for PDFs/Music)
-
-```dart
-import 'package:universal_downloader/universal_downloader.dart';
-
-// Better for PDFs, music files, and media content
-final result = await UniversalDownloader.downloadWebFile(
-  url: "https://example.com/song.mp3",
-  fileName: "song.mp3",
-  onComplete: (filePath) {
-    print("File downloaded: $filePath");
-  },
-  onError: (error) {
-    print("Download failed: $error");
-  },
-);
-```
-
 ## Platform Support
 
 | Platform | Storage Location | Progress Tracking |
@@ -118,18 +100,107 @@ The package automatically handles storage permissions for mobile platforms. Add 
 <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 ```
 
+### Web Download (Enhanced for PDFs/Music)
+
+For web-optimized downloads, use `downloadUrl()` which uses the browser's native download mechanism:
+
+```dart
+import 'package:universal_downloader/universal_downloader.dart';
+
+// Web-optimized download using browser's native mechanism
+await UniversalDownloader.downloadUrl(
+  url: "https://example.com/song.mp3",
+  filename: "song.mp3",
+);
+```
+
+**Note:** On native platforms, `downloadUrl()` automatically falls back to `downloadFromUrlStream()` for better compatibility.
+
 ## API Reference
 
 ### Core Methods
 
-#### `downloadFromUrlStream()` - **Recommended**
-Downloads files with streaming for better memory efficiency.
+#### `downloadFromUrlStream()` - **🚀 RECOMMENDED**
+Downloads files with streaming for better memory efficiency and progress tracking.
+
+```dart
+static Future<DownloadResult> downloadFromUrlStream({
+  required String url,
+  required String filename,
+  ProgressCallback? onProgress,
+  CompleteCallback? onComplete,
+  ErrorCallback? onError,
+  bool allowSelfSignedCertificate = false,
+})
+```
 
 #### `downloadFile()`
-Simple file download with optional progress tracking.
+Simple file download with optional progress tracking and callbacks.
 
-#### `downloadWebFile()`
-Enhanced web download for PDFs, music, and media files.
+```dart
+static Future<DownloadResult> downloadFile({
+  required String url,
+  required String fileName,
+  ProgressCallback? onProgress,
+  CompleteCallback? onComplete,
+  ErrorCallback? onError,
+  bool saveToDocuments = false,
+  bool allowSelfSignedCertificate = false,
+})
+```
+
+#### `downloadStream()`
+Downloads a file from a Stream<int> and saves it with the given filename.
+
+```dart
+static Future<void> downloadStream({
+  required Stream<int> stream,
+  required String filename,
+})
+```
+
+#### `downloadData()`
+Downloads a file from binary data (Uint8List) and saves it with the given filename.
+
+```dart
+static Future<void> downloadData({
+  required Uint8List data,
+  required String filename,
+})
+```
+
+#### `downloadUrl()`
+Downloads a file directly from a URL. Web-optimized, uses browser's native download.
+
+```dart
+static Future<void> downloadUrl({
+  required String url,
+  String? filename,
+})
+```
+
+### Utility Getters
+
+#### `supportsDirectorySelection`
+Checks if the current platform supports directory selection.
+
+```dart
+static bool get supportsDirectorySelection
+```
+
+#### `supportsProgressTracking`
+Checks if the current platform supports progress tracking.
+
+```dart
+static bool get supportsProgressTracking
+```
+
+#### `platformName`
+Gets the current platform name.
+
+```dart
+static String get platformName
+```
 
 ### Models
 
@@ -183,6 +254,13 @@ flutter run
 ```
 
 ## Changelog
+
+### 1.0.6
+- **Release**: Complete API documentation update
+- **Updated**: README.md with all core methods and their signatures
+- **Added**: Comprehensive method documentation for downloadStream, downloadData, downloadUrl
+- **Fixed**: Web download example to use correct method (downloadUrl instead of non-existent downloadWebFile)
+- **Enhanced**: API reference section with complete method signatures and parameters
 
 ### 1.0.5
 - **Release**: Documentation update with enhanced README
