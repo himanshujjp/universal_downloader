@@ -5,6 +5,21 @@
 - **Updated**: Documentation and changelog for proper release
 - **Verified**: All 6 platforms (Android, iOS, Web, Windows, macOS, Linux) fully supported
 
+## 1.0.2
+
+- **Release**: Platform support fixes and documentation updates
+- **Fixed**: Added explicit platform declarations for better pub.dev detection
+- **Updated**: CHANGELOG.md and README.md with platform support details
+- **Improved**: Package metadata and documentation
+
+## 1.0.1
+
+- **Fixed**: Web downloader now supports all file types without restrictions
+- **Fixed**: Resolved CORS detection issues in web downloads
+- **Fixed**: Corrected filename corruption in web downloads (removed problematic character replacement)
+- **Improved**: Enhanced error handling for web download failures
+- **Improved**: Simplified download logic for better reliability
+
 ## 1.0.0
 
 - **Initial Release** with full platform support
