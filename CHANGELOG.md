@@ -1,9 +1,9 @@
 ## 1.0.4
 
-- **Release**: Complete changelog documentation update
-- **Added**: Missing changelog entries for versions 1.0.1 and 1.0.2
-- **Updated**: Full version history documentation
-- **Improved**: Package documentation completeness
+- **Release**: Enhanced documentation with clear recommendations
+- **Updated**: `downloadFromUrlStream()` prominently featured as recommended method
+- **Improved**: README structure and examples for better user experience
+- **Fixed**: Version consistency across all documentation
 
 ## 1.0.3
 
