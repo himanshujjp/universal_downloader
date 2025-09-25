@@ -1,3 +1,10 @@
+## 1.0.8
+
+- **Release**: Static analysis improvements and enhanced discoverability
+- **Fixed**: HTML interpretation issue in documentation comments (improves pub.dev score)
+- **Updated**: Topics/tags optimized for better package discoverability
+- **Improved**: Code formatting in documentation for better readability
+
 ## 1.0.7
 
 - **Release**: Web platform modernization and dependency updates

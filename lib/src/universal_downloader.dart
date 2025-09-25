@@ -38,7 +38,7 @@ class UniversalDownloader {
   /// [saveToDocuments] - Whether to save to Documents directory instead of Downloads (mobile only)
   /// [allowSelfSignedCertificate] - Whether to allow self-signed SSL certificates (native platforms only)
   ///
-  /// Returns a Future<DownloadResult> with the download result
+  /// Returns a `Future<DownloadResult>` with the download result
   static Future<DownloadResult> downloadFile({
     required String url,
     required String fileName,
