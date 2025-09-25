@@ -1,9 +1,8 @@
-// ignore_for_file: avoid_web_libraries_in_flutter
-
 import 'dart:async';
-import 'dart:html' as html;
 import 'dart:typed_data';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:web/web.dart' as web;
 
 /// Downloads a file from a [stream] into the destination [filename].
 ///
@@ -18,14 +17,14 @@ Future<void> downloadFromStream(Stream<int> stream, String filename) async {
   final b64 = base64Encode(bytes);
 
   // Create the link with the file
-  final anchor =
-      html.AnchorElement(href: 'data:application/octet-stream;base64,$b64');
+  final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
+  anchor.href = 'data:application/octet-stream;base64,$b64';
 
   // Add the name
   anchor.download = filename;
 
   // Trigger download
-  html.document.body?.append(anchor);
+  web.document.body?.append(anchor);
   anchor.click();
   anchor.remove();
 }
@@ -38,190 +37,89 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
   final cleanFilename =
       actualFilename.replaceAll('/', '_').replaceAll('\\', '_');
 
-  // Method 1: XMLHttpRequest Blob (Primary - most reliable for downloads)
+  // Method 1: HTTP GET with base64 encoding (Primary - most reliable for downloads)
   try {
-    final request = html.HttpRequest();
-    request.open('GET', url);
-    request.responseType = 'blob';
-    request.timeout = 30000;
-    request.withCredentials = true;
-
-    try {
-      request.setRequestHeader('Accept', '*/*');
-      request.setRequestHeader('Cache-Control', 'no-cache');
-      request.setRequestHeader(
-          'User-Agent', 'Mozilla/5.0 (compatible; UniversalDownloader)');
-    } catch (headerError) {
-      // Ignore header errors silently
-    }
-
-    final completer = Completer<void>();
-
-    request.onLoad.listen((event) {
-      if (request.status == 200 && request.response != null) {
-        try {
-          final blob = request.response as html.Blob;
-          if (blob.size == 0) {
-            completer.completeError(Exception('Empty response'));
-            return;
-          }
-
-          final objectUrl = html.Url.createObjectUrl(blob);
-          final anchor = html.AnchorElement(href: objectUrl)
-            ..download = cleanFilename
-            ..style.display = 'none'
-            ..rel = 'noopener';
-
-          anchor.setAttribute('download', cleanFilename);
-          anchor.setAttribute('target', '_self');
-
-          html.document.body?.append(anchor);
-
-          Future.delayed(const Duration(milliseconds: 100), () {
-            anchor.click();
-          });
-
-          Future.delayed(const Duration(milliseconds: 2000), () {
-            html.Url.revokeObjectUrl(objectUrl);
-            anchor.remove();
-          });
-
-          completer.complete();
-        } catch (blobError) {
-          completer.completeError(blobError);
-        }
-      } else {
-        completer.completeError(Exception('HTTP ${request.status}'));
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final bytes = response.bodyBytes;
+      if (bytes.isEmpty) {
+        throw Exception('Empty response');
       }
-    });
 
-    request.onError.listen((event) {
-      completer.completeError(Exception('Network error'));
-    });
+      // Encode our file in base64
+      final b64 = base64Encode(bytes);
 
-    request.onTimeout.listen((event) {
-      completer.completeError(Exception('Timeout'));
-    });
+      // Create the link with the file
+      final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
+      anchor.href = 'data:application/octet-stream;base64,$b64';
+      anchor.download = cleanFilename;
 
-    request.send();
-    await completer.future;
-    return;
+      // Trigger download
+      web.document.body?.append(anchor);
+      anchor.click();
+      anchor.remove();
+
+      return;
+    } else {
+      throw Exception('HTTP ${response.statusCode}');
+    }
   } catch (e) {
     // Method 1 failed, continue to Method 1.5
   }
 
-  // Method 1.5: XMLHttpRequest Blob without credentials (fallback for CORS issues)
+  // Method 1.5: HTTP GET with base64 encoding without credentials (fallback for CORS issues)
   try {
-    final request = html.HttpRequest();
-    request.open('GET', url);
-    request.responseType = 'blob';
-    request.timeout = 30000;
-    request.withCredentials = false;
-
-    try {
-      request.setRequestHeader('Accept', '*/*');
-    } catch (headerError) {
-      // Ignore header errors
-    }
-
-    final completer = Completer<void>();
-
-    request.onLoad.listen((event) {
-      if (request.status == 200 && request.response != null) {
-        try {
-          final blob = request.response as html.Blob;
-          if (blob.size == 0) {
-            completer.completeError(Exception('Empty response'));
-            return;
-          }
-
-          final objectUrl = html.Url.createObjectUrl(blob);
-          final anchor = html.AnchorElement(href: objectUrl)
-            ..download = cleanFilename
-            ..style.display = 'none'
-            ..rel = 'noopener';
-
-          anchor.setAttribute('download', cleanFilename);
-          anchor.setAttribute('target', '_self');
-
-          html.document.body?.append(anchor);
-
-          Future.delayed(const Duration(milliseconds: 100), () {
-            anchor.click();
-          });
-
-          Future.delayed(const Duration(milliseconds: 2000), () {
-            html.Url.revokeObjectUrl(objectUrl);
-            anchor.remove();
-          });
-
-          completer.complete();
-        } catch (blobError) {
-          completer.completeError(blobError);
-        }
-      } else {
-        completer.completeError(Exception('HTTP ${request.status}'));
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final bytes = response.bodyBytes;
+      if (bytes.isEmpty) {
+        throw Exception('Empty response');
       }
-    });
 
-    request.onError.listen((event) {
-      completer.completeError(Exception('Network error'));
-    });
+      // Encode our file in base64
+      final b64 = base64Encode(bytes);
 
-    request.onTimeout.listen((event) {
-      completer.completeError(Exception('Timeout'));
-    });
+      // Create the link with the file
+      final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
+      anchor.href = 'data:application/octet-stream;base64,$b64';
+      anchor.download = cleanFilename;
 
-    request.send();
-    await completer.future;
-    return;
+      // Trigger download
+      web.document.body?.append(anchor);
+      anchor.click();
+      anchor.remove();
+
+      return;
+    } else {
+      throw Exception('HTTP ${response.statusCode}');
+    }
   } catch (e) {
     // Method 1.5 failed, continue to Method 2.5
   }
 
-  // Method 2.5: Fetch API with no-cors mode (for PDFs and other restricted content)
+  // Method 2.5: Direct anchor download with no-cors (for PDFs and other restricted content)
   try {
-    final response = await html.window.fetch(url, {
-      'method': 'GET',
-      'mode': 'no-cors',
-    });
+    final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
+    anchor.href = url;
+    anchor.download = cleanFilename;
+    anchor.style.display = 'none';
+    anchor.rel = 'noopener';
 
-    try {
-      final blob = await response.blob();
+    anchor.setAttribute('download', cleanFilename);
+    anchor.setAttribute('target', '_self');
 
-      if (blob.size == 0) {
-        throw Exception('Empty response');
-      }
+    web.document.body?.append(anchor);
+    anchor.click();
 
-      final objectUrl = html.Url.createObjectUrl(blob);
+    await Future.delayed(const Duration(milliseconds: 800));
+    anchor.remove();
 
-      final anchor = html.AnchorElement(href: objectUrl)
-        ..download = cleanFilename
-        ..style.display = 'none';
-
-      anchor.setAttribute('download', cleanFilename);
-      anchor.setAttribute('target', '_self');
-
-      html.document.body?.append(anchor);
-
-      Future.delayed(const Duration(milliseconds: 100), () {
-        anchor.click();
-      });
-
-      Future.delayed(const Duration(milliseconds: 2000), () {
-        html.Url.revokeObjectUrl(objectUrl);
-        anchor.remove();
-      });
-
-      return;
-    } catch (blobError) {
-      // Method 2.5 failed, continue to next method
-    }
+    return;
   } catch (e) {
     // Method 2.5 failed, continue to Method 2.7
   }
 
-  // Method 2.7: Special Fetch for media files (force download headers)
+  // Method 2.7: Direct anchor download for media files
   try {
     final isMediaFile = cleanFilename.toLowerCase().endsWith('.mp3') ||
         cleanFilename.toLowerCase().endsWith('.mp4') ||
@@ -229,45 +127,26 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
         cleanFilename.toLowerCase().endsWith('.m4a');
 
     if (isMediaFile) {
-      final response = await html.window.fetch(url, {
-        'method': 'GET',
-        'headers': {
-          'Accept': 'application/octet-stream, */*',
-          'Cache-Control': 'no-cache',
-        },
-        'mode': 'cors',
+      final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
+      anchor.href = url;
+      anchor.download = cleanFilename;
+      anchor.style.display = 'none';
+      anchor.type = 'application/octet-stream';
+
+      anchor.setAttribute('download', cleanFilename);
+      anchor.setAttribute('target', '_blank');
+
+      web.document.body?.append(anchor);
+
+      Future.delayed(const Duration(milliseconds: 100), () {
+        anchor.click();
       });
 
-      if (response.status >= 200 && response.status < 300) {
-        final blob = await response.blob();
+      Future.delayed(const Duration(milliseconds: 1000), () {
+        anchor.remove();
+      });
 
-        if (blob.size == 0) {
-          throw Exception('Empty response');
-        }
-
-        final objectUrl = html.Url.createObjectUrl(blob);
-
-        final anchor = html.AnchorElement(href: objectUrl)
-          ..download = cleanFilename
-          ..style.display = 'none'
-          ..type = 'application/octet-stream';
-
-        anchor.setAttribute('download', cleanFilename);
-        anchor.setAttribute('target', '_blank');
-
-        html.document.body?.append(anchor);
-
-        Future.delayed(const Duration(milliseconds: 100), () {
-          anchor.click();
-        });
-
-        Future.delayed(const Duration(milliseconds: 2000), () {
-          html.Url.revokeObjectUrl(objectUrl);
-          anchor.remove();
-        });
-
-        return;
-      }
+      return;
     }
   } catch (e) {
     // Method 2.7 failed, continue to Method 2.8
@@ -280,38 +159,27 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
         cleanFilename.toLowerCase().endsWith('.m4a');
 
     if (isMediaFile) {
-      final response = await html.window.fetch(url, {
-        'method': 'GET',
-        'mode': 'cors',
-      });
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final bytes = response.bodyBytes;
 
-      if (response.status >= 200 && response.status < 300) {
-        final blob = await response.blob();
-
-        if (blob.size == 0) {
-          throw Exception('Empty response');
-        }
-
-        if (blob.size > 50 * 1024 * 1024) {
+        if (bytes.length > 50 * 1024 * 1024) {
           throw Exception('File too large');
         }
 
-        final reader = html.FileReader();
-        reader.readAsDataUrl(blob);
+        final b64 = base64Encode(bytes);
+        final dataUrl = 'data:application/octet-stream;base64,$b64';
 
-        await reader.onLoad.first;
-
-        final dataUrl = reader.result as String;
-
-        final anchor = html.AnchorElement(href: dataUrl)
-          ..download = cleanFilename
-          ..style.display = 'none'
-          ..type = 'application/octet-stream';
+        final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
+        anchor.href = dataUrl;
+        anchor.download = cleanFilename;
+        anchor.style.display = 'none';
+        anchor.type = 'application/octet-stream';
 
         anchor.setAttribute('download', cleanFilename);
         anchor.setAttribute('target', '_blank');
 
-        html.document.body?.append(anchor);
+        web.document.body?.append(anchor);
 
         Future.delayed(const Duration(milliseconds: 100), () {
           anchor.click();
@@ -336,22 +204,22 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
         cleanFilename.toLowerCase().endsWith('.mov') ||
         cleanFilename.toLowerCase().endsWith('.wav');
 
-    final anchor = html.AnchorElement(href: url)
-      ..download = cleanFilename
-      ..style.display = 'none'
-      ..rel = 'noopener';
+    final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
+    anchor.href = url;
+    anchor.download = cleanFilename;
+    anchor.style.display = 'none';
+    anchor.rel = 'noopener';
 
     if (isMediaFile) {
       anchor.setAttribute('target', '_blank');
       anchor.setAttribute('download', cleanFilename);
-      anchor.attributes['download'] = cleanFilename;
     } else {
       anchor.setAttribute('target', '_self');
     }
 
     anchor.setAttribute('download', cleanFilename);
 
-    html.document.body?.append(anchor);
+    web.document.body?.append(anchor);
     anchor.click();
 
     await Future.delayed(const Duration(milliseconds: 800));
@@ -376,16 +244,16 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
       final forceDownloadUrl =
           '$url${separator}download=1&force=1&t=${DateTime.now().millisecondsSinceEpoch}';
 
-      final anchor = html.AnchorElement(href: forceDownloadUrl)
-        ..download = cleanFilename
-        ..style.display = 'none'
-        ..rel = 'noopener'
-        ..target = '_blank';
+      final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
+      anchor.href = forceDownloadUrl;
+      anchor.download = cleanFilename;
+      anchor.style.display = 'none';
+      anchor.rel = 'noopener';
+      anchor.target = '_blank';
 
       anchor.setAttribute('download', cleanFilename);
-      anchor.attributes['download'] = cleanFilename;
 
-      html.document.body?.append(anchor);
+      web.document.body?.append(anchor);
       anchor.click();
 
       await Future.delayed(const Duration(milliseconds: 1000));
@@ -403,15 +271,16 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
     final downloadUrl =
         '$url${separator}download=true&t=${DateTime.now().millisecondsSinceEpoch}';
 
-    final anchor = html.AnchorElement(href: downloadUrl)
-      ..download = cleanFilename
-      ..style.display = 'none'
-      ..rel = 'noopener';
+    final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
+    anchor.href = downloadUrl;
+    anchor.download = cleanFilename;
+    anchor.style.display = 'none';
+    anchor.rel = 'noopener';
 
     anchor.setAttribute('download', cleanFilename);
     anchor.setAttribute('target', '_self');
 
-    html.document.body?.append(anchor);
+    web.document.body?.append(anchor);
     anchor.click();
 
     await Future.delayed(const Duration(milliseconds: 800));
@@ -431,12 +300,13 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
         cleanFilename.toLowerCase().endsWith('.wav');
 
     if (isMediaFile) {
-      final iframe = html.IFrameElement()
-        ..src = url
-        ..style.display = 'none'
-        ..setAttribute('download', cleanFilename);
+      final iframe =
+          web.document.createElement('iframe') as web.HTMLIFrameElement;
+      iframe.src = url;
+      iframe.style.display = 'none';
+      iframe.setAttribute('download', cleanFilename);
 
-      html.document.body?.append(iframe);
+      web.document.body?.append(iframe);
 
       await Future.delayed(const Duration(milliseconds: 500));
 
@@ -444,7 +314,7 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
           ? '$url&download=1&force_download=1&filename=$cleanFilename&t=${DateTime.now().millisecondsSinceEpoch}'
           : '$url?download=1&force_download=1&filename=$cleanFilename&t=${DateTime.now().millisecondsSinceEpoch}';
 
-      html.window.open(downloadUrl, '_blank');
+      web.window.open(downloadUrl, '_blank');
       iframe.remove();
 
       // Download initiated
@@ -453,7 +323,7 @@ Future<void> downloadFromUrl(String url, [String? filename]) async {
           ? '$url&download=true&filename=$cleanFilename&t=${DateTime.now().millisecondsSinceEpoch}'
           : '$url?download=true&filename=$cleanFilename&t=${DateTime.now().millisecondsSinceEpoch}';
 
-      html.window.open(downloadUrl, '_self');
+      web.window.open(downloadUrl, '_self');
       // Download initiated
     }
   } catch (finalError) {
@@ -471,14 +341,14 @@ Future<void> downloadData(Uint8List data, String filename) {
   final b64 = base64Encode(data);
 
   // Create the link with the file
-  final anchor =
-      html.AnchorElement(href: 'data:application/octet-stream;base64,$b64');
+  final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
+  anchor.href = 'data:application/octet-stream;base64,$b64';
 
   // Add the name
   anchor.download = filename;
 
   // Trigger download
-  html.document.body?.append(anchor);
+  web.document.body?.append(anchor);
   anchor.click();
   anchor.remove();
 

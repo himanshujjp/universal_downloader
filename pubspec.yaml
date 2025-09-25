@@ -1,6 +1,6 @@
 name: universal_downloader
 description: A Flutter package for downloading files on all platforms (Android, iOS, Web, Windows, macOS, Linux) with progress tracking and comprehensive error handling.
-version: 1.0.6
+version: 1.0.7
 homepage: https://github.com/himanshujjp/universal_downloader
 repository: https://github.com/himanshujjp/universal_downloader
 documentation: https://github.com/himanshujjp/universal_downloader#readme
@@ -33,6 +33,7 @@ dependencies:
   path: ^1.9.0
   permission_handler: ^12.0.0
   device_info_plus: ^12.0.0
+  web: ^1.1.1
 
 dev_dependencies:
   flutter_test:

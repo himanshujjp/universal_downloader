@@ -1,3 +1,11 @@
+## 1.0.7
+
+- **Release**: Web platform modernization and dependency updates
+- **Updated**: Migrated from `dart:html` to `web` package for better compatibility
+- **Added**: `web: ^1.1.1` dependency for modern web platform support
+- **Improved**: Web downloader reliability and performance
+- **Fixed**: Web platform compatibility issues with newer Flutter versions
+
 ## 1.0.6
 
 - **Release**: Complete API documentation update
