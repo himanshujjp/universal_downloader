@@ -23,7 +23,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  universal_downloader: ^1.0.7
+  universal_downloader: <latest>
 ```
 
 Then run:
@@ -78,19 +78,27 @@ await UniversalDownloader.downloadFile(
 
 ## Platform Support
 
-| Platform | Storage Location | Progress Tracking |
-|----------|------------------|-------------------|
-| **Android** | Downloads/Documents directory | ✅ |
-| **iOS** | Documents directory | ✅ |
-| **Web** | Browser downloads | ✅ |
-| **Windows** | Downloads folder | ✅ |
-| **macOS** | Downloads folder | ✅ |
-| **Linux** | Downloads folder | ✅ |
+| Platform | Storage Location | Setup Required | Progress Tracking |
+|----------|------------------|----------------|-------------------|
+| **Android** | Downloads/Documents directory | ⚠️ Manifest permissions | ✅ |
+| **iOS** | Documents directory | ✅ None | ✅ |
+| **Web** | Browser downloads | ✅ None | ✅ |
+| **Windows** | `%USERPROFILE%\Downloads` | ✅ None | ✅ |
+| **macOS** | `~/Downloads` | ⚠️ Entitlements | ✅ |
+| **Linux** | `~/Downloads` | ✅ None | ✅ |
 
-## Mobile Permissions
+## Platform Setup
 
-The package automatically handles storage permissions for mobile platforms. Add these permissions to your `android/app/src/main/AndroidManifest.xml`:
+### ✅ **Ready to Use** (No setup required)
+- **Windows**: Uses `USERPROFILE\Downloads` automatically
+- **Linux**: Uses `HOME/Downloads` or XDG directories
+- **iOS**: Uses app Documents directory (sandboxed)
+- **Web**: Uses browser's native download mechanism
 
+### ⚠️ **Setup Required**
+
+#### **Android Permissions**
+Add to `android/app/src/main/AndroidManifest.xml`:
 ```xml
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
@@ -98,6 +106,17 @@ The package automatically handles storage permissions for mobile platforms. Add 
 <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
 <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+```
+
+#### **macOS Entitlements**
+Add to `macos/Runner/DebugProfile.entitlements` and `Release.entitlements`:
+```xml
+<key>com.apple.security.files.downloads.read-write</key>
+<true/>
+<key>com.apple.security.files.user-selected.read-write</key>
+<true/>
+<key>com.apple.security.network.client</key>
+<true/>
 ```
 
 ### Web Download (Enhanced for PDFs/Music)

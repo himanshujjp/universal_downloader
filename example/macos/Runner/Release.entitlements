@@ -4,5 +4,14 @@
 <dict>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
+	<!-- Allow access to user's Downloads folder -->
+	<key>com.apple.security.files.downloads.read-write</key>
+	<true/>
+	<!-- Allow access to user's Documents folder -->
+	<key>com.apple.security.files.user-selected.read-write</key>
+	<true/>
+	<!-- Allow network access for downloads -->
+	<key>com.apple.security.network.client</key>
+	<true/>
 </dict>
 </plist>

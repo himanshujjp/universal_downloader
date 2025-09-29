@@ -271,8 +271,104 @@ class UniversalDownloader {
             return await getApplicationDocumentsDirectory();
           }
         }
+      } else if (io.Platform.isMacOS) {
+        // macOS - use user's actual Downloads folder
+        if (saveToDocuments) {
+          // Use system Documents folder for macOS
+          final homeDir = io.Platform.environment['HOME'];
+          if (homeDir != null) {
+            final documentsDir = io.Directory(path.join(homeDir, 'Documents'));
+            if (await documentsDir.exists()) {
+              return documentsDir;
+            }
+          }
+          // Fallback to app documents
+          return await getApplicationDocumentsDirectory();
+        } else {
+          // Use system Downloads folder for macOS
+          final homeDir = io.Platform.environment['HOME'];
+          if (homeDir != null) {
+            final downloadsDir = io.Directory(path.join(homeDir, 'Downloads'));
+            if (await downloadsDir.exists()) {
+              return downloadsDir;
+            }
+          }
+          // Fallback to getDownloadsDirectory()
+          return await getDownloadsDirectory() ??
+              await getApplicationDocumentsDirectory();
+        }
+      } else if (io.Platform.isWindows) {
+        // Windows - use user's actual Downloads folder
+        if (saveToDocuments) {
+          // Try USERPROFILE/Documents first
+          final userProfile = io.Platform.environment['USERPROFILE'];
+          if (userProfile != null) {
+            final documentsDir =
+                io.Directory(path.join(userProfile, 'Documents'));
+            if (await documentsDir.exists()) {
+              return documentsDir;
+            }
+          }
+          // Fallback to app documents
+          return await getApplicationDocumentsDirectory();
+        } else {
+          // Try USERPROFILE/Downloads first
+          final userProfile = io.Platform.environment['USERPROFILE'];
+          if (userProfile != null) {
+            final downloadsDir =
+                io.Directory(path.join(userProfile, 'Downloads'));
+            if (await downloadsDir.exists()) {
+              return downloadsDir;
+            }
+          }
+          // Fallback to getDownloadsDirectory()
+          return await getDownloadsDirectory() ??
+              await getApplicationDocumentsDirectory();
+        }
+      } else if (io.Platform.isLinux) {
+        // Linux - use user's actual Downloads folder
+        if (saveToDocuments) {
+          // Try XDG_DOCUMENTS_DIR or HOME/Documents
+          final xdgDocuments = io.Platform.environment['XDG_DOCUMENTS_DIR'];
+          if (xdgDocuments != null && xdgDocuments.isNotEmpty) {
+            final documentsDir = io.Directory(xdgDocuments);
+            if (await documentsDir.exists()) {
+              return documentsDir;
+            }
+          }
+
+          final homeDir = io.Platform.environment['HOME'];
+          if (homeDir != null) {
+            final documentsDir = io.Directory(path.join(homeDir, 'Documents'));
+            if (await documentsDir.exists()) {
+              return documentsDir;
+            }
+          }
+          // Fallback to app documents
+          return await getApplicationDocumentsDirectory();
+        } else {
+          // Try XDG_DOWNLOAD_DIR or HOME/Downloads
+          final xdgDownloads = io.Platform.environment['XDG_DOWNLOAD_DIR'];
+          if (xdgDownloads != null && xdgDownloads.isNotEmpty) {
+            final downloadsDir = io.Directory(xdgDownloads);
+            if (await downloadsDir.exists()) {
+              return downloadsDir;
+            }
+          }
+
+          final homeDir = io.Platform.environment['HOME'];
+          if (homeDir != null) {
+            final downloadsDir = io.Directory(path.join(homeDir, 'Downloads'));
+            if (await downloadsDir.exists()) {
+              return downloadsDir;
+            }
+          }
+          // Fallback to getDownloadsDirectory()
+          return await getDownloadsDirectory() ??
+              await getApplicationDocumentsDirectory();
+        }
       } else {
-        // Desktop platforms (Windows, macOS, Linux)
+        // Other desktop platforms - generic fallback
         return await getDownloadsDirectory() ??
             await getApplicationDocumentsDirectory();
       }
@@ -306,6 +402,17 @@ class UniversalDownloader {
     return 'Unknown';
   }
 
+  /// Gets the current download directory path that will be used for downloads
+  static Future<String> getDownloadDirectoryPath(
+      {bool saveToDocuments = false}) async {
+    if (kIsWeb) {
+      return 'Browser Downloads folder (exact path depends on browser settings)';
+    }
+
+    final directory = await _getDownloadDirectory(saveToDocuments);
+    return directory.path;
+  }
+
   /// Creates an HTTP client with optional SSL certificate bypass
   static http.Client _createHttpClient(bool allowSelfSignedCertificate) {
     if (kIsWeb) {
@@ -336,13 +443,14 @@ class UniversalDownloader {
   static Future<void> downloadStream({
     required Stream<int> stream,
     required String filename,
+    bool saveToDocuments = false,
   }) async {
     if (kIsWeb) {
       // Use web-specific downloader
       await downloadFromStream(stream, filename);
     } else {
-      // On native platforms, write to file
-      final dir = await getApplicationDocumentsDirectory();
+      // On native platforms, write to appropriate directory
+      final dir = await _getDownloadDirectory(saveToDocuments);
       final file = io.File(path.join(dir.path, filename));
       final sink = file.openWrite();
 
@@ -360,13 +468,14 @@ class UniversalDownloader {
   static Future<void> downloadData({
     required Uint8List data,
     required String filename,
+    bool saveToDocuments = false,
   }) async {
     if (kIsWeb) {
       // Use web-specific downloader
       await triggerWebDownload(data, filename);
     } else {
-      // On native platforms, write to file
-      final dir = await getApplicationDocumentsDirectory();
+      // On native platforms, write to appropriate directory
+      final dir = await _getDownloadDirectory(saveToDocuments);
       final file = io.File(path.join(dir.path, filename));
       await file.writeAsBytes(data);
     }
@@ -456,15 +565,19 @@ class UniversalDownloader {
         );
 
         // Use downloadStream to save the file
+        final dir =
+            await _getDownloadDirectory(false); // Use Downloads directory
+        final fullPath = path.join(dir.path, filename);
+
         await downloadStream(
           stream: streamController.stream,
           filename: filename,
         );
 
-        onComplete?.call(filename);
+        onComplete?.call(fullPath);
 
         return DownloadResult.success(
-          filePath: filename,
+          filePath: fullPath,
           url: url,
           fileName: filename,
           totalBytes: downloadedBytes,

@@ -1,3 +1,17 @@
+## 1.1.0
+
+- **Major Release**: Enhanced macOS, Windows, and Linux Support
+- **NEW**: macOS-specific path handling with proper user Downloads folder access
+- **NEW**: Windows-specific path handling with USERPROFILE environment variable support
+- **NEW**: Linux-specific path handling with XDG Base Directory Specification support
+- **NEW**: `getDownloadDirectoryPath()` method to check download destination paths
+- **IMPROVED**: Platform-specific directory resolution for better user experience
+- **ADDED**: Comprehensive platform documentation and setup guides
+- **ADDED**: macOS entitlements examples for proper Downloads folder access
+- **ADDED**: Android manifest permissions examples for storage access
+- **ENHANCED**: Error handling with platform-specific guidance
+- **TESTED**: Verified compatibility on macOS, Linux, and Web platforms
+
 ## 1.0.8
 
 - **Release**: Static analysis improvements and enhanced discoverability
