@@ -1,4 +1,14 @@
-## 1.1.0
+# Changelog
+
+## [1.1.1] - 2024-09-29
+
+### Documentation
+- **Improved**: Cleaned README.md by removing duplicate changelog content
+- **Enhanced**: README now focuses on usage documentation (changelog in separate CHANGELOG.md)
+- **Added**: Contributing and Issues sections to README
+- **Optimized**: Reduced README from 334 to 285 lines for better readability
+
+## [1.1.0] - 2024-09-29
 
 - **Major Release**: Enhanced macOS, Windows, and Linux Support
 - **NEW**: macOS-specific path handling with proper user Downloads folder access
